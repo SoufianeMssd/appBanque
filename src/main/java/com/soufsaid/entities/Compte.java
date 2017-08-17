@@ -4,17 +4,28 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 @Entity
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="TYPE_COMPTE",discriminatorType=DiscriminatorType.STRING,length=2)
 public abstract class Compte implements Serializable{
-	@Id @GeneratedValue
+	@Id
 	private String codeCompte;
 	private Date dateCompte;
 	private double solde;
+	@ManyToOne
+	@JoinColumn(name="code_client")
 	private Client client;
+	@OneToMany(mappedBy="compte")
 	private Collection<Operation> operations;
 	public String getCodeCompte() {
 		return codeCompte;
